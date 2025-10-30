@@ -496,7 +496,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     }
                     Navigator.pushReplacement(
                       context,
-                      MaterialPageRoute(builder: (context) => SuccessScreen()),
+                      MaterialPageRoute(builder: (context) => SuccessScreen(name: _nameController.text, imageurl: selectedimage)),
                     );
                   } else {
                     // Show validation errors
@@ -523,7 +523,9 @@ class _SignupScreenState extends State<SignupScreen> {
 }
 
 class SuccessScreen extends StatefulWidget {
-  const SuccessScreen({super.key});
+  final String name;
+  final String imageurl;
+  const SuccessScreen({super.key, required this.name, required this.imageurl});
 
   @override
   State<SuccessScreen> createState() => _SuccessScreenState();
@@ -543,8 +545,18 @@ class _SuccessScreenState extends State<SuccessScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              'Begin your Signup Adventure!',
+              'Welcome Aboard, ${widget.name}',
               style: TextStyle(fontSize: 24),
+            ),
+            SizedBox(height: 20),
+            Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+              ),
+              child: CircleAvatar(
+                radius: 50,
+                backgroundImage: AssetImage(widget.imageurl),
+              ),
             ),
             SizedBox(height: 20),
             ElevatedButton(
@@ -554,7 +566,7 @@ class _SuccessScreenState extends State<SuccessScreen> {
                   MaterialPageRoute(builder: (context) => const SignupScreen()),
                 );
               },
-              child: Text('Go to Signup'),
+              child: Text('Go back to Signup!'),
             ),
           ],
         ),
