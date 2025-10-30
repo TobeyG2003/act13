@@ -545,7 +545,7 @@ class _SuccessScreenState extends State<SuccessScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              'Welcome Aboard, ${widget.name}',
+              'Welcome Aboard, ${widget.name}!',
               style: TextStyle(fontSize: 24),
             ),
             SizedBox(height: 20),
@@ -559,8 +559,47 @@ class _SuccessScreenState extends State<SuccessScreen> {
               ),
             ),
             SizedBox(height: 20),
+            Text('Your Signup Achievements:'),
+            SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  strongpassword ? Icons.check_circle : Icons.cancel,
+                  color: strongpassword ? Colors.green : Colors.red,
+                ),
+                SizedBox(width: 10),
+                Text('Strong Password Master - Created a strong password'),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  earlybird ? Icons.check_circle : Icons.cancel,
+                  color: earlybird ? Colors.green : Colors.red,
+                ),
+                SizedBox(width: 10),
+                Text('The Early Bird Special - Signed up before noon'),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  profilecompleter ? Icons.check_circle : Icons.cancel,
+                  color: profilecompleter ? Colors.green : Colors.red,
+                ),
+                SizedBox(width: 10),
+                Text('Profile Completer - Completed profile information'),
+              ],
+            ),
+            SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
+                earlybird = false;
+                strongpassword = false;
+                profilecompleter = false;
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => const SignupScreen()),
