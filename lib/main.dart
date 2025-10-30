@@ -1,3 +1,4 @@
+import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:awesome_shake_widget/shake_widget.dart';
@@ -99,6 +100,8 @@ class _SignupScreenState extends State<SignupScreen> {
   final GlobalKey<ShakeWidgetState> _passwordShakeKey = GlobalKey<ShakeWidgetState>();
   final GlobalKey<ShakeWidgetState> _confirmPasswordShakeKey = GlobalKey<ShakeWidgetState>();
 
+  final ConfettiController _confettiController = ConfettiController(duration: const Duration(seconds: 1));
+
   double _passwordStrength = 0.0;
   String _passwordStrengthText = 'Enter a password';
 
@@ -108,6 +111,7 @@ class _SignupScreenState extends State<SignupScreen> {
   bool hasconfirmpassword = false;
 
   double status = 0.0;
+  double currentstatus = 0.0;
   String message = '';
 
   @override
@@ -191,25 +195,48 @@ class _SignupScreenState extends State<SignupScreen> {
                (hasconfirmpassword ? 0.25 : 0);
       if (status == 1.0) {
       message = 'Ready for Adventure!';
+      if (status > currentstatus) {
       HapticFeedback.heavyImpact();
+      _confettiController.play();
+      }
+      currentstatus = status;
     } else if (status >= .75) {
       message = 'Almost Done!';
+      if (status > currentstatus) {
       HapticFeedback.mediumImpact();
+      _confettiController.play();
+      }
+      currentstatus = status;
     } else if (status >= .5) {
       message = 'Halfway There!';
+      if (status > currentstatus) {
       HapticFeedback.lightImpact();
+      _confettiController.play();
+      }
+      currentstatus = status;
     } else if (status == .25) {
       message = 'Great Start!';
+      if (status > currentstatus) {
       HapticFeedback.lightImpact();
+      _confettiController.play();
+      }
+      currentstatus = status;
     } else {
       message = '';
+      currentstatus = status;
     }
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return ConfettiWidget(confettiController: _confettiController,
+     blastDirectionality: BlastDirectionality.explosive,
+     shouldLoop: false,
+     colors: const [Colors.green, Colors.blue, Colors.pink, Colors.orange, Colors.purple],
+     numberOfParticles: 20,
+     gravity: 0.3,
+    child: Scaffold(
       appBar: AppBar(
         title: const Text('Signup'),
       ),
@@ -496,7 +523,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     }
                     Navigator.pushReplacement(
                       context,
-                      MaterialPageRoute(builder: (context) => SuccessScreen(name: _nameController.text, imageurl: selectedimage)),
+                      MaterialPageRoute(builder: (context) => SuccessScreen()),
                     );
                   } else {
                     // Show validation errors
@@ -518,14 +545,13 @@ class _SignupScreenState extends State<SignupScreen> {
       ),
         ),
     )
+    ),
     );
   }
 }
 
 class SuccessScreen extends StatefulWidget {
-  final String name;
-  final String imageurl;
-  const SuccessScreen({super.key, required this.name, required this.imageurl});
+  const SuccessScreen({super.key});
 
   @override
   State<SuccessScreen> createState() => _SuccessScreenState();
@@ -545,67 +571,18 @@ class _SuccessScreenState extends State<SuccessScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              'Welcome Aboard, ${widget.name}!',
+              'Begin your Signup Adventure!',
               style: TextStyle(fontSize: 24),
-            ),
-            SizedBox(height: 20),
-            Container(
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-              ),
-              child: CircleAvatar(
-                radius: 50,
-                backgroundImage: AssetImage(widget.imageurl),
-              ),
-            ),
-            SizedBox(height: 20),
-            Text('Your Signup Achievements:'),
-            SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  strongpassword ? Icons.check_circle : Icons.cancel,
-                  color: strongpassword ? Colors.green : Colors.red,
-                ),
-                SizedBox(width: 10),
-                Text('Strong Password Master - Created a strong password'),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  earlybird ? Icons.check_circle : Icons.cancel,
-                  color: earlybird ? Colors.green : Colors.red,
-                ),
-                SizedBox(width: 10),
-                Text('The Early Bird Special - Signed up before noon'),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  profilecompleter ? Icons.check_circle : Icons.cancel,
-                  color: profilecompleter ? Colors.green : Colors.red,
-                ),
-                SizedBox(width: 10),
-                Text('Profile Completer - Completed profile information'),
-              ],
             ),
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                earlybird = false;
-                strongpassword = false;
-                profilecompleter = false;
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => const SignupScreen()),
                 );
               },
-              child: Text('Go back to Signup!'),
+              child: Text('Go to Signup'),
             ),
           ],
         ),
